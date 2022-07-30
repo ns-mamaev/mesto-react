@@ -1,6 +1,6 @@
 function PopupWithForm(props) {
 
-  return (<div className={`popup popup_content_${props.name}`}>
+  return (<div className={`popup popup_content_${props.name}${props.isOpen? ' popup_opened' : ''}`}>
       <div className="popup__container">
         <button aria-label="close popup" className="popup__close-button"></button>
         <form className="form form_content_edit-profile" name={props.name} noValidate>
