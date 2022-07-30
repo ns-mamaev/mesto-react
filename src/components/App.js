@@ -11,16 +11,22 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
+    setIsEditAvatarPopupOpen(true);
   };
 
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpened(!isEditProfilePopupOpened);
+    setIsEditProfilePopupOpened(true);
   };
 
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+    setIsAddPlacePopupOpen(true);
   };
+
+  function closeAllPopups() {
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpened(false);
+    setIsAddPlacePopupOpen(false);
+  }
   
   return (
   <div className="page">
@@ -28,7 +34,7 @@ function App() {
     <Header />
     <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
     <Footer />
-    <PopupWithForm name="edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpened}>
+    <PopupWithForm name="edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpened} onClose={closeAllPopups}>
       <label className="form__field">
         <input type="text" className="form__item form__item_content_profile-name" name="name" placeholder="Введите ваше имя" required minLength="2" maxLength="40" />
         <span className="form__error form__error_field_profile-name"></span>
@@ -38,7 +44,7 @@ function App() {
         <span className="form__error form__error_field_profile-about"></span>
       </label>
     </PopupWithForm>
-    <PopupWithForm name="add-card" title="Новое место" isOpen={isAddPlacePopupOpen}>
+    <PopupWithForm name="add-card" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
       <label className="form__field">
         <input type="text" className="form__item form__item_content_new-place-name" name="name" placeholder="Название" required minLength="2" maxLength="40" />
         <span className="form__error form__error_field_place-name"></span>
@@ -48,7 +54,7 @@ function App() {
         <span className="form__error form__error_field_place-link"></span>
       </label>
     </PopupWithForm>
-    <PopupWithForm name="edit-avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen}>
+    <PopupWithForm name="edit-avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
       <label className="form__field">
         <input type="url" className="form__item form__item_content_avatar-link" name="avatar" placeholder="Ссылка на аватар" required minLength="7" />
         <span className="form__error form__error_field_avatar-link"></span>
