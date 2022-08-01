@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import api from '../utills/api';
+import Card from './Card';
 
 function Main(props) {
-  const [userName, setUserName] = useState(undefined);
-  const [userDescription, setUserDescription] = useState(undefined);
-  const [userAvatar, setUserAvatar] = useState(undefined);
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
@@ -19,26 +20,11 @@ function Main(props) {
 
   useEffect(() => {
     api.getInitialCards()
-      .then((cardsData) => {
-        setCards(
-          cardsData.map(({ name, link, likes, _id }) => {
-            return (
-              <li className="photo-card" key={_id}>
-                <div className="photo-card__caption">
-                  <h2 className="photo-card__title">{name}</h2>
-                  <div className="photo-card__likes-wrapper">
-                    <button type="button" className="photo-card__like-button" aria-label="like image"></button>
-                    <span className="photo-card__likes-counter">{likes.length}</span>
-                  </div>  
-                </div>
-                <img src={link} alt={name} className="photo-card__image" />
-                <button type="button" className="photo-card__delete-button" aria-label="delete card"></button>
-              </li>)
-          })
-        );
-      })
+      .then((cards) => {
+        setCards(cards)
+      })  
       .catch((err) => console.log(`ошибка при загрузке одной или нескольких карточек: ${err}`));
-  }, [])
+  }, []);
 
   return (
     <main className="content">
@@ -55,7 +41,7 @@ function Main(props) {
       </section>
       <section className="elements">
         <ul className="elements__list">
-          {cards}
+          {cards.map(card => <Card card={card} key={card._id} onCardClick={props.onCardClick}/>)}
         </ul>
       </section>
     </main>
