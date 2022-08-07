@@ -41,7 +41,7 @@ class Api {
     return this._changeData(data, '/users/me');
   }
 
-  changeAvatar(data) {
+  setAvatar(data) {
     return this._changeData(data, '/users/me/avatar');
   }
 

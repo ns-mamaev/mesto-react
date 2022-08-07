@@ -1,6 +1,7 @@
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
 import { useEffect, useState } from 'react';
 import api from 'utills/api';
+import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import EditProfilePopup from './EditProfilePopup';
 import Footer from './Footer';
@@ -13,6 +14,7 @@ function App() {
   const [isEditProfilePopupOpened, setIsEditProfilePopupOpened] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
 
   const [currentUser, setCurrentUser] = useState({});
@@ -40,6 +42,23 @@ function App() {
     setSelectedCard(card);
   }
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(user => user._id === currentUser._id);
+    api.changeLikeCardStatus(card._id, isLiked)
+      .then(updatedCard => {
+        setCards(state => state.map(oldCard => oldCard._id === card._id ? updatedCard : oldCard))
+      })
+      .catch(err => `Невозможно обработать лайк: ${err}`);
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+      .then(() => {
+        setCards(state => state.filter(oldCard => oldCard._id !== card._id))
+      })
+      .catch(err => `Невозможно удалить карточку: ${err}`);
+  }
+
   function handleUpdateUser(userData) {
     api.setUserInfo(userData)
       .then(newData => {
@@ -49,6 +68,22 @@ function App() {
       .finally(() => closeAllPopups());
   }
 
+  function handleUpdateAvatar(avatarData) {
+    api.setAvatar(avatarData)
+      .then(newData => {
+        setCurrentUser(newData);
+      })
+      .catch(err => `Невозможно обновить данные пользователя: ${err}`)
+      .finally(() => closeAllPopups());
+  }
+
+  function handleAddPlaceSubmit(cardData) {
+    api.addCard(cardData)
+      .then(newCard => setCards(cards => [newCard, ...cards]))
+      .catch(err => `Невозможно добавить новую карточку: ${err}`)
+      .finally(() => closeAllPopups())
+  }
+
   useEffect(() => {
     api.getUserInfo()
       .then(user => {
@@ -56,6 +91,14 @@ function App() {
       })
       .catch(err => console.log(`ошибка при загрузке данных пользователя: ${err}`))
   }, [])
+
+  useEffect(() => {
+    api.getInitialCards()
+      .then((cards) => {
+        setCards(cards)
+      })
+      .catch((err) => console.log(`ошибка при загрузке одной или нескольких карточек: ${err}`));
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -67,6 +110,9 @@ function App() {
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+          cards={cards}
         />
         <Footer />
         <EditProfilePopup
@@ -77,18 +123,13 @@ function App() {
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
         />
-        <PopupWithForm name="add-card" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
-          <label className="form__field">
-            <input type="text" className="form__item form__item_content_new-place-name" name="name" placeholder="Название" required minLength="2" maxLength="40" />
-            <span className="form__error form__error_field_place-name"></span>
-          </label>
-          <label className="form__field">
-            <input type="url" className="form__item form__item_content_new-place-link" name="link" placeholder="Ссылка на картинку" required minLength="7" />
-            <span className="form__error form__error_field_place-link"></span>
-          </label>
-        </PopupWithForm>
-
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
         <PopupWithForm name="confirmation" title="Вы уверены?" buttonText="Да" />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
