@@ -1,5 +1,5 @@
 class Api {
-  constructor({baseUrl, headers}) {
+  constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
   }
@@ -21,7 +21,7 @@ class Api {
   }
 
   getUserInfo() {
-    return this._getData('/users/me'); 
+    return this._getData('/users/me');
   }
 
   getInitialCards() {
@@ -37,21 +37,21 @@ class Api {
       .then(res => this._handleResponse(res));
   }
 
-  changeUserInfo(data) {
+  setUserInfo(data) {
     return this._changeData(data, '/users/me');
   }
-  
+
   changeAvatar(data) {
     return this._changeData(data, '/users/me/avatar');
   }
-  
+
   addCard(data) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
     })
-    .then(res => this._handleResponse(res));
+      .then(res => this._handleResponse(res));
   }
 
   _handleLike(method, id) {
@@ -64,12 +64,8 @@ class Api {
       .then(res => this._handleResponse(res))
   }
 
-  setLike(id) {
-    return this._handleLike('PUT', id)
-  }
-
-  removeLike(id) {
-    return this._handleLike('DELETE', id)
+  changeLikeCardStatus(id, isLiked) {
+    return isLiked ? this._handleLike('DELETE', id) : this._handleLike('PUT', id);
   }
 
   deleteCard(id) {
@@ -79,8 +75,8 @@ class Api {
         authorization: this._headers.authorization
       }
     })
-    .then(res => this._handleResponse(res))
-  }  
+      .then(res => this._handleResponse(res))
+  }
 }
 
 const api = new Api({
