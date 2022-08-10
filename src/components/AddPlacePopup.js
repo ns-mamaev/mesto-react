@@ -6,6 +6,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
     const onChange = (e) => {
         setValues(values => ({ ...values, [e.target.name]: e.target.value }))
+        console.log(e.target.validity.valid)
     };
 
     const handleSubmit = (e) => {
