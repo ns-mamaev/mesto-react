@@ -8,7 +8,6 @@ import Footer from './Footer';
 import Header from './Header';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
-import PopupWithForm from './PopupWithForm';
 
 function App() {
   const [isEditProfilePopupOpened, setIsEditProfilePopupOpened] = useState(false);
@@ -19,75 +18,75 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState({});
 
-  function handleEditAvatarClick() {
+  const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
-  }
+  };
 
-  function handleEditProfileClick() {
+  const handleEditProfileClick = () => {
     setIsEditProfilePopupOpened(true);
-  }
+  };
 
-  function handleAddPlaceClick() {
+  const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
-  }
+  };
 
-  function closeAllPopups() {
+  const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpened(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
-  }
+  };
 
-  function handleCardClick(card) {
+  const handleCardClick = (card) => {
     setSelectedCard(card);
-  }
+  };
 
-  function handleCardLike(card) {
+  const handleCardLike = (card) => {
     const isLiked = card.likes.some((user) => user._id === currentUser._id);
     api
       .changeLikeCardStatus(card._id, isLiked)
       .then((updatedCard) => {
         setCards((state) => state.map((oldCard) => (oldCard._id === card._id ? updatedCard : oldCard)));
       })
-      .catch((err) => `Невозможно обработать лайк: ${err}`);
-  }
+      .catch((err) => console.log(`Невозможно обработать лайк: ${err}`));
+  };
 
-  function handleCardDelete(card) {
+  const handleCardDelete = (card) => {
     api
       .deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((oldCard) => oldCard._id !== card._id));
       })
-      .catch((err) => `Невозможно удалить карточку: ${err}`);
-  }
+      .catch((err) => console.log(`Невозможно удалить карточку: ${err}`));
+  };
 
-  function handleUpdateUser(userData) {
+  const handleUpdateUser = (userData) => {
     api
       .setUserInfo(userData)
       .then((newData) => {
         setCurrentUser(newData);
       })
-      .catch((err) => `Невозможно обновить данные пользователя: ${err}`)
+      .catch((err) => console.log(`Невозможно обновить данные пользователя: ${err}`))
       .finally(() => closeAllPopups());
-  }
+  };
 
-  function handleUpdateAvatar(avatarData) {
+  const handleUpdateAvatar = (avatarData) => {
     api
       .setAvatar(avatarData)
       .then((newData) => {
         setCurrentUser(newData);
       })
-      .catch((err) => `Невозможно обновить данные пользователя: ${err}`)
+      .catch((err) => console.log(`Невозможно обновить данные пользователя: ${err}`))
       .finally(() => closeAllPopups());
-  }
+  };
 
-  function handleAddPlaceSubmit(cardData) {
+  const handleAddPlaceSubmit = (cardData) => {
     api
       .addCard(cardData)
       .then((newCard) => setCards((cards) => [newCard, ...cards]))
-      .catch((err) => `Невозможно добавить новую карточку: ${err}`)
+      .catch((err) => console.log(`Невозможно добавить новую карточку: ${err}`))
       .finally(() => closeAllPopups());
-  }
+  };
 
   useEffect(() => {
     api
@@ -135,7 +134,6 @@ function App() {
         <EditProfilePopup isOpen={isEditProfilePopupOpened} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
-        <PopupWithForm name="confirmation" title="Вы уверены?" buttonText="Да" />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
     </CurrentUserContext.Provider>

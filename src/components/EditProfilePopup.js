@@ -2,12 +2,9 @@ import { CurrentUserContext } from 'contexts/CurrentUserContext';
 import React, { useContext, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
+function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
   const currentUser = useContext(CurrentUserContext);
   const [values, setValues] = useState({ name: '', about: '' });
-  const [inputsValidity, setInputsValidity] = useState({ name: false, about: false });
-  const [validationMessages, setValidationMessages] = useState({ name: '', about: '' });
-  const [isFormValid, setIsFormValid] = useState(false);
 
   React.useEffect(() => {
     if (currentUser.name && currentUser.about) {
@@ -19,21 +16,8 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     }
   }, [currentUser]);
 
-  React.useEffect(() => {
-    if (!Object.values(inputsValidity).some((value) => value === false)) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [inputsValidity]);
-
   const onChange = (e) => {
     setValues((values) => ({ ...values, [e.target.name]: e.target.value }));
-    setInputsValidity((inputsValidity) => ({ ...inputsValidity, [e.target.name]: e.target.validity.valid }));
-    setValidationMessages((validationMessages) => ({
-      ...validationMessages,
-      [e.target.name]: e.target.validationMessage,
-    }));
   };
 
   const handleSubmit = (e) => {
@@ -48,7 +32,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      isValid={isFormValid}
+      buttonText={buttonText}
     >
       <label className="form__field">
         <input
@@ -62,9 +46,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           value={values.name}
           onChange={onChange}
         />
-        <span className={`form__error${inputsValidity.name ? '' : ' form__error_visible'}`}>
-          {validationMessages.name}
-        </span>
+        <span className="form__error" />
       </label>
       <label className="form__field">
         <input
@@ -78,9 +60,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           value={values.about}
           onChange={onChange}
         />
-        <span className={`form__error${inputsValidity.about ? '' : ' form__error_visible'}`}>
-          {validationMessages.about}
-        </span>
+        <span className="form__error" />
       </label>
     </PopupWithForm>
   );
