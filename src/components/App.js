@@ -112,9 +112,11 @@ function App() {
         closeAllPopups();
       }
     };
-    document.addEventListener('keydown', closeByEsc);
+    if (isAddPlacePopupOpen || isEditAvatarPopupOpen || isEditProfilePopupOpened) {
+      document.addEventListener('keydown', closeByEsc);
+    }
     return () => document.removeEventListener('keydown', closeByEsc);
-  }, []);
+  }, [isAddPlacePopupOpen, isEditAvatarPopupOpen, isEditProfilePopupOpened]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

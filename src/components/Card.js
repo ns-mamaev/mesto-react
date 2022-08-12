@@ -1,10 +1,12 @@
-import { CurrentUserContext } from "contexts/CurrentUserContext";
-import { useContext } from "react";
+import { CurrentUserContext } from 'contexts/CurrentUserContext';
+import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import { cardShape } from 'utills/constants';
 
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
-  const currentUser = useContext(CurrentUserContext)
+  const currentUser = useContext(CurrentUserContext);
   const isOwn = card.owner._id === currentUser._id;
-  const isLiked = card.likes.some(user => user._id === currentUser._id);
+  const isLiked = card.likes.some((user) => user._id === currentUser._id);
   const btnLikeClassName = `photo-card__like-button${isLiked ? ' photo-card__like-button_liked' : ''}`;
 
   return (
@@ -22,16 +24,23 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
         </div>
       </div>
       <img src={card.link} alt={card.name} className="photo-card__image" onClick={() => onCardClick(card)} />
-      {isOwn &&
+      {isOwn && (
         <button
           type="button"
           className="photo-card__delete-button"
           aria-label="delete card"
           onClick={() => onCardDelete(card)}
         />
-      }
+      )}
     </li>
-  )
+  );
 }
+
+Card.propTypes = {
+  card: cardShape,
+  onCardClick: PropTypes.func.isRequired,
+  onCardLike: PropTypes.func.isRequired,
+  onCardDelete: PropTypes.func.isRequired,
+};
 
 export default Card;
