@@ -106,12 +106,13 @@ function App() {
       .catch((err) => console.log(`ошибка при загрузке одной или нескольких карточек: ${err}`));
   }, []);
 
+  const closeByEsc = (e) => {
+    if (e.key === 'Escape') {
+      closeAllPopups();
+    }
+  };
+
   useEffect(() => {
-    const closeByEsc = (e) => {
-      if (e.key === 'Escape') {
-        closeAllPopups();
-      }
-    };
     if (isAddPlacePopupOpen || isEditAvatarPopupOpen || isEditProfilePopupOpened) {
       document.addEventListener('keydown', closeByEsc);
     }

@@ -1,4 +1,4 @@
-function PopupWithForm({ name, title, isOpen, onClose, onSubmit, children }) {
+function PopupWithForm({ name, title, isOpen, onClose, onSubmit, children, isFormNotValid }) {
   const handleClick = (e) => {
     if (e.target.classList.contains('popup') || e.target.classList.contains('popup__close-button')) {
       //реализация закрытия по клику на оверлей либо по клику на крестик
@@ -13,6 +13,14 @@ function PopupWithForm({ name, title, isOpen, onClose, onSubmit, children }) {
         <form className="form form_content_edit-profile" name={name} onSubmit={onSubmit}>
           <h3 className="form__title">{title}</h3>
           {children}
+          <button
+            type="submit"
+            name="profile-save"
+            className={`form__button ${isFormNotValid ? 'form__button_disabled' : ''}`}
+            disabled={isFormNotValid}
+          >
+            Сохранить
+          </button>
         </form>
       </div>
     </div>

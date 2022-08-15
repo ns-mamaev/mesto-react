@@ -5,16 +5,10 @@ import PopupWithForm from './PopupWithForm';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
   const currentUser = useContext(CurrentUserContext);
-  const { values, isErrors, errorMessages, isFormNotValid, setValues, onChange } = useFormWithValidation();
-
-  // const [values, setValues] = useState({ name: '', about: '' });
-  // const [isErrors, setIsErrors] = useState({ name: false, about: false });
-  // const [errorMessages, setErrorMessages] = useState({ name: '', about: '' });
-  // const [isFormNotValid, setIsFormNotValid] = useState(false);
-
-  // React.useEffect(() => {
-  //   setIsFormNotValid(isErrors.name || isErrors.about);
-  // }, [isErrors.name, isErrors.about]);
+  const { values, setValues, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
+    'name',
+    'about',
+  ]);
 
   React.useEffect(() => {
     if (currentUser.name && currentUser.about) {
@@ -25,16 +19,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
       });
     }
   }, [currentUser]);
-
-  // const onChange = (e) => {
-  //   setValues((values) => ({ ...values, [e.target.name]: e.target.value }));
-  //   setIsErrors((isErrors) => ({ ...isErrors, [e.target.name]: !e.target.validity.valid }));
-  //   if (!e.target.validity.valid) {
-  //     setErrorMessages({ ...errorMessages, [e.target.name]: e.target.validationMessage });
-  //   } else {
-  //     setErrorMessages({ ...errorMessages, [e.target.name]: '' });
-  //   }
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,8 +31,9 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
       title="Редактировать профиль"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
       buttonText={buttonText}
+      onSubmit={handleSubmit}
+      isFormNotValid={isFormNotValid}
     >
       <label className="form__field">
         <input
@@ -78,19 +63,8 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
         />
         <span className={`form__error ${isErrors?.about ? 'form__error_visible' : ''}`}>{errorMessages?.about}</span>
       </label>
-      <button
-        type="submit"
-        name="profile-save"
-        className={`form__button ${isFormNotValid ? 'form__button_disabled' : ''}`}
-        disabled={isFormNotValid}
-      >
-        Сохранить
-      </button>
     </PopupWithForm>
   );
 }
 
 export default EditProfilePopup;
-// const isNotValid = useCallback(() => isErrors.name || isErrors.about, [isErrors.name, isErrors.about]);
-
-// const isNotValid = () => (isErrors.name || isErrors.about);

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+  // не использую валидацию, т.к. по заданию нужен неуправляемый компонент с рефом
   const avatarRef = useRef();
 
   const handleSubmit = (e) => {

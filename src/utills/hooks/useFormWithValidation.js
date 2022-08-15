@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
+import { transormToObject } from 'utills/ulils';
 
-const useFormWithValidation = () => {
-  const [values, setValues] = useState({ name: '', about: '' });
-  const [isErrors, setIsErrors] = useState({ name: false, about: false });
-  const [errorMessages, setErrorMessages] = useState({ name: '', about: '' });
+const useFormWithValidation = (inputNames) => {
+  const [values, setValues] = useState(transormToObject(inputNames, ''));
+  const [isErrors, setIsErrors] = useState(transormToObject(inputNames, false));
+  const [errorMessages, setErrorMessages] = useState(transormToObject(inputNames, ''));
   const [isFormNotValid, setIsFormNotValid] = useState(false);
 
   useEffect(() => {
-    setIsFormNotValid(isErrors.name || isErrors.about);
-  }, [isErrors.name, isErrors.about]);
+    const hasErrors = Object.values(isErrors).includes(true);
+    setIsFormNotValid(hasErrors);
+  }, [isErrors]);
 
   const onChange = (e) => {
     setValues((values) => ({ ...values, [e.target.name]: e.target.value }));
