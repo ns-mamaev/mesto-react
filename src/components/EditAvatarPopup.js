@@ -1,19 +1,42 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   // не использую валидацию, т.к. по заданию нужен неуправляемый компонент с рефом
   const avatarRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingError, setIsloadingError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     onUpdateAvatar({
       avatar: avatarRef.current.value,
-    });
+    })
+      .finally(() => {
+        setIsLoading(false);
+      })
+      .then(onClose)
+      .catch((err) => {
+        setIsloadingError(true);
+        setTimeout(() => {
+          setIsloadingError(false);
+        }, 2000);
+        console.log(`Невозможно обновить данные пользователя: ${err}`);
+      });
   };
 
   return (
-    <PopupWithForm name="edit-avatar" title="Обновить аватар" isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit}>
+    <PopupWithForm
+      name="edit-avatar"
+      title="Обновить аватар"
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      defaultButtonText="Сохранить"
+      isLoading={isLoading}
+      isLoadingError={isLoadingError}
+    >
       <label className="form__field">
         <input
           type="url"

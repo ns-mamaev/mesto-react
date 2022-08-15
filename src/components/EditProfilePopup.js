@@ -1,14 +1,16 @@
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
+function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
   const { values, setValues, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
     'name',
     'about',
   ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingError, setIsloadingError] = useState(false);
 
   React.useEffect(() => {
     if (currentUser.name && currentUser.about) {
@@ -22,7 +24,19 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdateUser(values);
+    setIsLoading(true);
+    onUpdateUser(values)
+      .finally(() => {
+        setIsLoading(false);
+      })
+      .then(onClose)
+      .catch((err) => {
+        setIsloadingError(true);
+        setTimeout(() => {
+          setIsloadingError(false);
+        }, 2000);
+        console.log(`Невозможно обновить данные пользователя: ${err}`);
+      });
   };
 
   return (
@@ -31,9 +45,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
       title="Редактировать профиль"
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={buttonText}
+      defaultButtonText="Сохранить"
       onSubmit={handleSubmit}
       isFormNotValid={isFormNotValid}
+      isLoading={isLoading}
+      isLoadingError={isLoadingError}
     >
       <label className="form__field">
         <input

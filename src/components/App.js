@@ -64,23 +64,15 @@ function App() {
   };
 
   const handleUpdateUser = (userData) => {
-    api
-      .setUserInfo(userData)
-      .then((newData) => {
-        setCurrentUser(newData);
-      })
-      .catch((err) => console.log(`Невозможно обновить данные пользователя: ${err}`))
-      .finally(() => closeAllPopups());
+    return api.setUserInfo(userData).then((newData) => {
+      setCurrentUser(newData);
+    });
   };
 
   const handleUpdateAvatar = (avatarData) => {
-    api
-      .setAvatar(avatarData)
-      .then((newData) => {
-        setCurrentUser(newData);
-      })
-      .catch((err) => console.log(`Невозможно обновить данные пользователя: ${err}`))
-      .finally(() => closeAllPopups());
+    return api.setAvatar(avatarData).then((newData) => {
+      setCurrentUser(newData);
+    });
   };
 
   const handleAddPlaceSubmit = (cardData) => {

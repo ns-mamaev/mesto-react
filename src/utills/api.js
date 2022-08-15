@@ -14,10 +14,9 @@ class Api {
   _getData(path) {
     return fetch(`${this._baseUrl}${path}`, {
       headers: {
-        authorization: this._headers.authorization
-      }
-    })
-      .then(res => this._handleResponse(res));
+        authorization: this._headers.authorization,
+      },
+    }).then((res) => this._handleResponse(res));
   }
 
   getUserInfo() {
@@ -32,36 +31,33 @@ class Api {
     return fetch(`${this._baseUrl}${path}`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify(data)
-    })
-      .then(res => this._handleResponse(res));
+      body: JSON.stringify(data),
+    }).then((res) => this._handleResponse(res));
   }
 
   setUserInfo(data) {
-    return this._changeData(data, '/users/me');
+    return this._changeData(data, '/users/med');
   }
 
   setAvatar(data) {
-    return this._changeData(data, '/users/me/avatar');
+    return this._changeData(data, '/users/me/avatarh');
   }
 
   addCard(data) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
-      body: JSON.stringify(data)
-    })
-      .then(res => this._handleResponse(res));
+      body: JSON.stringify(data),
+    }).then((res) => this._handleResponse(res));
   }
 
   _handleLike(method, id) {
     return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: method,
       headers: {
-        authorization: this._headers.authorization
-      }
-    })
-      .then(res => this._handleResponse(res))
+        authorization: this._headers.authorization,
+      },
+    }).then((res) => this._handleResponse(res));
   }
 
   changeLikeCardStatus(id, isLiked) {
@@ -72,10 +68,9 @@ class Api {
     return fetch(`${this._baseUrl}/cards/${id}`, {
       method: 'DELETE',
       headers: {
-        authorization: this._headers.authorization
-      }
-    })
-      .then(res => this._handleResponse(res))
+        authorization: this._headers.authorization,
+      },
+    }).then((res) => this._handleResponse(res));
   }
 }
 
@@ -83,8 +78,8 @@ const api = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-47',
   headers: {
     authorization: 'c057a3e7-5ee0-421c-b032-822b62f6abd9',
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 export default api;
