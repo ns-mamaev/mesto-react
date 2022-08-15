@@ -13,6 +13,7 @@ function App() {
   const [isEditProfilePopupOpened, setIsEditProfilePopupOpened] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isImagePopupOpened, setIsImagePopupOpened] = useState(false);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
 
@@ -34,11 +35,13 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpened(false);
     setIsAddPlacePopupOpen(false);
-    setSelectedCard({});
+    setIsImagePopupOpened(false);
+    setTimeout(() => setSelectedCard({}), 500); //не убираю картинку пока показывается анимация закрытия попапа
   };
 
   const handleCardClick = (card) => {
     setSelectedCard(card);
+    setIsImagePopupOpened(true);
   };
 
   const handleCardLike = (card) => {
@@ -113,11 +116,11 @@ function App() {
   };
 
   useEffect(() => {
-    if (isAddPlacePopupOpen || isEditAvatarPopupOpen || isEditProfilePopupOpened) {
+    if (isAddPlacePopupOpen || isEditAvatarPopupOpen || isEditProfilePopupOpened || isImagePopupOpened) {
       document.addEventListener('keydown', closeByEsc);
     }
     return () => document.removeEventListener('keydown', closeByEsc);
-  }, [isAddPlacePopupOpen, isEditAvatarPopupOpen, isEditProfilePopupOpened]);
+  }, [isAddPlacePopupOpen, isEditAvatarPopupOpen, isEditProfilePopupOpened, isImagePopupOpened]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -137,7 +140,7 @@ function App() {
         <EditProfilePopup isOpen={isEditProfilePopupOpened} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ImagePopup isOpen={isImagePopupOpened} card={selectedCard} onClose={closeAllPopups} />
       </div>
     </CurrentUserContext.Provider>
   );
