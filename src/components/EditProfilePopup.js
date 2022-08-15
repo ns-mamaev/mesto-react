@@ -1,16 +1,14 @@
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
-  const { values, setValues, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
+  const { values, setValues, resetForm, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
     'name',
     'about',
   ]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingError, setIsloadingError] = useState(false);
 
   React.useEffect(() => {
     if (currentUser.name && currentUser.about) {
@@ -22,21 +20,19 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     }
   }, [currentUser]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    onUpdateUser(values)
-      .finally(() => {
-        setIsLoading(false);
-      })
-      .then(onClose)
-      .catch((err) => {
-        setIsloadingError(true);
-        setTimeout(() => {
-          setIsloadingError(false);
-        }, 2000);
-        console.log(`Невозможно обновить данные пользователя: ${err}`);
+  const onSubmit = () => onUpdateUser(values);
+
+  const handleClose = () => {
+    // обнуляю состояние формы и записываю данные пользователя, чтобы они стояли в инпуте при открытии,
+    // таймер - для изменения только после анимации закрытия попапа
+    setTimeout(() => {
+      resetForm();
+      setValues({
+        name: currentUser.name,
+        about: currentUser.about,
       });
+    }, 500);
+    onClose();
   };
 
   return (
@@ -44,12 +40,10 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       name="edit-profile"
       title="Редактировать профиль"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       defaultButtonText="Сохранить"
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       isFormNotValid={isFormNotValid}
-      isLoading={isLoading}
-      isLoadingError={isLoadingError}
     >
       <label className="form__field">
         <input

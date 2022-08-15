@@ -76,11 +76,7 @@ function App() {
   };
 
   const handleAddPlaceSubmit = (cardData) => {
-    api
-      .addCard(cardData)
-      .then((newCard) => setCards((cards) => [newCard, ...cards]))
-      .catch((err) => console.log(`Невозможно добавить новую карточку: ${err}`))
-      .finally(() => closeAllPopups());
+    return api.addCard(cardData).then((newCard) => setCards((cards) => [newCard, ...cards]));
   };
 
   useEffect(() => {

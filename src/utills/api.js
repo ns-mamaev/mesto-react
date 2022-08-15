@@ -36,11 +36,11 @@ class Api {
   }
 
   setUserInfo(data) {
-    return this._changeData(data, '/users/med');
+    return this._changeData(data, '/users/me');
   }
 
   setAvatar(data) {
-    return this._changeData(data, '/users/me/avatarh');
+    return this._changeData(data, '/users/me/avatar');
   }
 
   addCard(data) {

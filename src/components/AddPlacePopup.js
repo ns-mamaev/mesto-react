@@ -2,11 +2,15 @@ import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  const { values, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation(['name', 'link']);
+  const { values, resetForm, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
+    'name',
+    'link',
+  ]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onAddPlace(values);
+  const onSubmit = () => onAddPlace(values);
+  const handleClose = () => {
+    setTimeout(resetForm, 500); //жду закрытия попапа
+    onClose();
   };
 
   return (
@@ -14,8 +18,9 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name="add-card"
       title="Новое место"
       isOpen={isOpen}
-      onClose={onClose}
-      onSubmit={handleSubmit}
+      defaultButtonText="Добавить"
+      onClose={handleClose}
+      onSubmit={onSubmit}
       isFormNotValid={isFormNotValid}
     >
       <label className="form__field">
