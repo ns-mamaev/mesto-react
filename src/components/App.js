@@ -8,12 +8,14 @@ import Footer from './Footer';
 import Header from './Header';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
+import RemoveCardPopup from './RemoveCardPopup';
 
 function App() {
   const [isEditProfilePopupOpened, setIsEditProfilePopupOpened] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpened, setIsImagePopupOpened] = useState(false);
+  const [isRemoveCardPopupOpened, setIsRemoveCardPopupOpened] = useState(true);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
 
@@ -36,6 +38,7 @@ function App() {
     setIsEditProfilePopupOpened(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpened(false);
+    setIsRemoveCardPopupOpened(false);
     setTimeout(() => setSelectedCard({}), 500); //не убираю картинку пока показывается анимация закрытия попапа
   };
 
@@ -129,6 +132,7 @@ function App() {
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
         <ImagePopup isOpen={isImagePopupOpened} card={selectedCard} onClose={closeAllPopups} />
+        <RemoveCardPopup isOpen={isRemoveCardPopupOpened} onClose={closeAllPopups} onConfirmRemove={() => {}} />
       </div>
     </CurrentUserContext.Provider>
   );
