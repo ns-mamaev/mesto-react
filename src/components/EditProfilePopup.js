@@ -5,10 +5,8 @@ import PopupWithForm from './PopupWithForm';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
-  const { values, setValues, resetForm, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
-    'name',
-    'about',
-  ]);
+  const { values, setValues, resetValidation, isErrors, errorMessages, isFormNotValid, onChange } =
+    useFormWithValidation(['name', 'about']);
 
   React.useEffect(() => {
     if (currentUser.name && currentUser.about) {
@@ -23,14 +21,10 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const onSubmit = () => onUpdateUser(values);
 
   const handleClose = () => {
-    // обнуляю состояние формы и записываю данные пользователя, чтобы они стояли в инпуте при открытии,
     // таймер - для изменения только после анимации закрытия попапа
+    // значения инпутов изменятся при изменении currentUser
     setTimeout(() => {
-      resetForm();
-      setValues({
-        name: currentUser.name,
-        about: currentUser.about,
-      });
+      resetValidation();
     }, 500);
     onClose();
   };

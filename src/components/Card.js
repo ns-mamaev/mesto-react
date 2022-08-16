@@ -1,7 +1,5 @@
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
-import PropTypes from 'prop-types';
 import { useContext } from 'react';
-import { cardShape } from 'utills/constants';
 
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
@@ -35,12 +33,5 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
     </li>
   );
 }
-
-Card.propTypes = {
-  card: cardShape,
-  onCardClick: PropTypes.func.isRequired,
-  onCardLike: PropTypes.func.isRequired,
-  onCardDelete: PropTypes.func.isRequired,
-};
 
 export default Card;

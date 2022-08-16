@@ -2,14 +2,15 @@ import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  const { values, resetForm, isErrors, errorMessages, isFormNotValid, onChange } = useFormWithValidation([
-    'name',
-    'link',
-  ]);
+  const { values, setValues, resetValidation, isErrors, errorMessages, isFormNotValid, onChange } =
+    useFormWithValidation(['name', 'link']);
 
   const onSubmit = () => onAddPlace(values);
   const handleClose = () => {
-    setTimeout(resetForm, 500); //жду закрытия попапа
+    setTimeout(() => {
+      resetValidation();
+      setValues({ name: '', link: '' });
+    }, 500); //жду закрытия попапа
     onClose();
   };
 
@@ -26,7 +27,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       <label className="form__field">
         <input
           type="text"
-          className={`form__item form__item_content_profile-name ${isErrors?.about ? 'form__item_type_error' : ''} `}
+          className={`form__item form__item_content_profile-name ${isErrors?.name ? 'form__item_type_error' : ''} `}
           name="name"
           placeholder="Название"
           required
@@ -40,7 +41,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       <label className="form__field">
         <input
           type="url"
-          className={`form__item form__item_content_profile-name ${isErrors?.about ? 'form__item_type_error' : ''} `}
+          className={`form__item form__item_content_profile-name ${isErrors?.link ? 'form__item_type_error' : ''} `}
           name="link"
           placeholder="Ссылка на картинку"
           required

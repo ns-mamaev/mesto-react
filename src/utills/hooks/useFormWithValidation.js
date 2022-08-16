@@ -24,8 +24,7 @@ const useFormWithValidation = (inputNames) => {
     }
   };
 
-  const resetForm = () => {
-    setValues(transormToObject(inputNames, ''));
+  const resetValidation = () => {
     setIsErrors(transormToObject(inputNames, false));
     setErrorMessages(transormToObject(inputNames, ''));
     setIsFormNotValid(true);
@@ -40,7 +39,7 @@ const useFormWithValidation = (inputNames) => {
     isFormNotValid,
     setValues,
     onChange,
-    resetForm,
+    resetValidation,
   };
 };
 

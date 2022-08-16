@@ -1,7 +1,5 @@
 import { CurrentUserContext } from 'contexts/CurrentUserContext';
-import PropTypes from 'prop-types';
 import { useContext } from 'react';
-import { cardShape } from 'utills/constants';
 import Card from './Card';
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete, cards }) {
@@ -36,15 +34,5 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
     </main>
   );
 }
-
-Main.propTypes = {
-  cards: PropTypes.arrayOf(cardShape).isRequired,
-  onCardClick: PropTypes.func.isRequired,
-  onCardLike: PropTypes.func.isRequired,
-  onCardDelete: PropTypes.func.isRequired,
-  onEditAvatar: PropTypes.func.isRequired,
-  onEditProfile: PropTypes.func.isRequired,
-  onAddPlace: PropTypes.func.isRequired,
-};
 
 export default Main;
