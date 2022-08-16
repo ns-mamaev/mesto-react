@@ -15,9 +15,10 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpened, setIsImagePopupOpened] = useState(false);
-  const [isRemoveCardPopupOpened, setIsRemoveCardPopupOpened] = useState(true);
+  const [isRemoveCardPopupOpened, setIsRemoveCardPopupOpened] = useState(false);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
+  const [cardToDelete, setCardTodelete] = useState({});
 
   const [currentUser, setCurrentUser] = useState({});
 
@@ -58,12 +59,8 @@ function App() {
   };
 
   const handleCardDelete = (card) => {
-    api
-      .deleteCard(card._id)
-      .then(() => {
-        setCards((state) => state.filter((oldCard) => oldCard._id !== card._id));
-      })
-      .catch((err) => console.log(`Невозможно удалить карточку: ${err}`));
+    setIsRemoveCardPopupOpened(true);
+    setCardTodelete(card);
   };
 
   const handleUpdateUser = (userData) => {
@@ -80,6 +77,11 @@ function App() {
 
   const handleAddPlaceSubmit = (cardData) => {
     return api.addCard(cardData).then((newCard) => setCards((cards) => [newCard, ...cards]));
+  };
+
+  const handleConfirmRemove = () => {
+    const id = cardToDelete._id;
+    return api.deleteCard(id).then(() => setCards((cards) => cards.filter((card) => card._id !== id)));
   };
 
   useEffect(() => {
@@ -132,7 +134,11 @@ function App() {
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
         <ImagePopup isOpen={isImagePopupOpened} card={selectedCard} onClose={closeAllPopups} />
-        <RemoveCardPopup isOpen={isRemoveCardPopupOpened} onClose={closeAllPopups} onConfirmRemove={() => {}} />
+        <RemoveCardPopup
+          isOpen={isRemoveCardPopupOpened}
+          onClose={closeAllPopups}
+          onConfirmRemove={handleConfirmRemove}
+        />
       </div>
     </CurrentUserContext.Provider>
   );

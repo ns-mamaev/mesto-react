@@ -1,6 +1,6 @@
 import PopupWithForm from './PopupWithForm';
 
-const RemoveCardPopup = ({ isOpen, onClose, onSubmit }) => {
+const RemoveCardPopup = ({ isOpen, onClose, onConfirmRemove }) => {
   return (
     <PopupWithForm
       name="confirm"
@@ -8,7 +8,7 @@ const RemoveCardPopup = ({ isOpen, onClose, onSubmit }) => {
       isOpen={isOpen}
       onClose={onClose}
       defaultButtonText="Да"
-      onSubmit={onSubmit}
+      onSubmit={onConfirmRemove}
       isFormNotValid={false}
     />
   );
