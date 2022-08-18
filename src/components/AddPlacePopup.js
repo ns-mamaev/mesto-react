@@ -14,6 +14,7 @@ function AddPlacePopup({ isOpen, isLoading, onClose, onAddPlace }) {
       });
   }
 
+
   return (
     <PopupWithForm
       name="add-card"
