@@ -58,7 +58,7 @@ function App() {
     }
   };
 
-  const clearErrorMessage = (e) => {
+  const handleCloseErrorMessage = (e) => {
     if (e.target.classList.contains('popup') || e.target.classList.contains('popup__close-button')) {
       //реализация закрытия по клику на оверлей либо по клику на крестик
       setErrorMessage('');
@@ -87,7 +87,7 @@ function App() {
 
   const handleUpdateUser = (userData) => {
     setIsLoadingProfile(true)
-    return api.setUserInfo(userData)
+    api.setUserInfo(userData)
       .then((newData) => {
         setCurrentUser(newData);
         closeAllPopups();
@@ -98,7 +98,7 @@ function App() {
 
   const handleUpdateAvatar = (avatarData) => {
     setIsLoadingAvatar(true)
-    return api.setAvatar(avatarData).then((newData) => {
+    api.setAvatar(avatarData).then((newData) => {
       setCurrentUser(newData);
       closeAllPopups();
     })
@@ -108,7 +108,7 @@ function App() {
 
   const handleAddPlaceSubmit = (cardData) => {
     setIsLoadingAddPlace(true)
-    return api.addCard(cardData)
+    api.addCard(cardData)
       .then((newCard) => {
         setCards((cards) => [newCard, ...cards]);
         closeAllPopups();
@@ -120,7 +120,7 @@ function App() {
 
   const handleConfirmRemove = () => {
     setIsLoadingRemoveCard(true)
-    return api.deleteCard(cardToDelete._id)
+    api.deleteCard(cardToDelete._id)
       .then(() => {
         setCards((cards) => cards.filter((card) => card._id !== cardToDelete._id))
         closeAllPopups();
@@ -198,7 +198,7 @@ function App() {
           isLoading={isLoadingRemoveCard}
           onClose={handleClickOnPopup}
           onConfirmRemove={handleConfirmRemove} />
-        <ErrorPopup errorMessage={errorMessage} onClose={clearErrorMessage} />
+        <ErrorPopup errorMessage={errorMessage} onClose={handleCloseErrorMessage} />
       </div>
     </CurrentUserContext.Provider>
   );

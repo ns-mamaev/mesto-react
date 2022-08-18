@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
@@ -5,15 +6,17 @@ function AddPlacePopup({ isOpen, isLoading, onClose, onAddPlace }) {
   const { values, setValues, resetValidation, isErrors, errorMessages, isFormNotValid, onChange } =
     useFormWithValidation(['name', 'link']);
 
+  useEffect(() => {
+    if (isOpen) {
+      resetValidation()
+      setValues({ name: '', link: '' })
+    }
+  }, [isOpen]);
+
   const onSubmit = (e) => {
     e.preventDefault();
     onAddPlace(values)
-      .then(() => {
-        resetValidation();
-        setValues({ name: '', link: '' })
-      });
   }
-
 
   return (
     <PopupWithForm

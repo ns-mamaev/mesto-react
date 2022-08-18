@@ -15,13 +15,13 @@ function EditProfilePopup({ isOpen, isLoading, onClose, onUpdateUser }) {
         name: currentUser.name,
         about: currentUser.about,
       });
+      resetValidation();
     }
   }, [currentUser, isOpen]);
 
   const onSubmit = (e) => {
     e.preventDefault();
     onUpdateUser(values)
-      .then(resetValidation)
   }
 
   return (

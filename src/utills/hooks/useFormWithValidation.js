@@ -6,15 +6,15 @@ const useFormWithValidation = (inputNames) => {
   const [isErrors, setIsErrors] = useState(transormToObject(inputNames, false));
   const [errorMessages, setErrorMessages] = useState(transormToObject(inputNames, ''));
   const [isFormNotValid, setIsFormNotValid] = useState(true);
-  const [isTouched, setIsTouched] = useState(transormToObject(inputNames, false));
+  const [isTouched, setIstouched] = useState(false);
 
   useEffect(() => {
-    const hasErrors = Object.values(isTouched).includes(false) || Object.values(isErrors).includes(true);
+    const hasErrors = !isTouched || Object.values(isErrors).includes(true);
     setIsFormNotValid(hasErrors);
   }, [isErrors]);
 
   const onChange = (e) => {
-    setIsTouched((isTouched) => ({ ...isTouched, [e.target.name]: true }));
+    setIstouched(true);
     setValues((values) => ({ ...values, [e.target.name]: e.target.value }));
     setIsErrors((isErrors) => ({ ...isErrors, [e.target.name]: !e.target.validity.valid }));
     if (!e.target.validity.valid) {
@@ -27,14 +27,12 @@ const useFormWithValidation = (inputNames) => {
   const resetValidation = () => {
     setIsErrors(transormToObject(inputNames, false));
     setErrorMessages(transormToObject(inputNames, ''));
-    setIsFormNotValid(true);
-    setIsTouched(transormToObject(inputNames, false));
+    setIstouched(false)
   };
 
   return {
     values,
     isErrors,
-    setIsErrors,
     errorMessages,
     isFormNotValid,
     setValues,
