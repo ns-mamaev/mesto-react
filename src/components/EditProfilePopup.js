@@ -20,13 +20,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
   const onSubmit = () => onUpdateUser(values);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
     // таймер - для изменения только после анимации закрытия попапа
     // значения инпутов изменятся при изменении currentUser
     setTimeout(() => {
       resetValidation();
     }, 500);
-    onClose();
+    onClose(e);
   };
 
   return (

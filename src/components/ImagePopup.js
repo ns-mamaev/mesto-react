@@ -1,13 +1,6 @@
 function ImagePopup({ card, isOpen, onClose }) {
-  const handleClick = (e) => {
-    if (e.target.classList.contains('popup') || e.target.classList.contains('popup__close-button')) {
-      //реализация закрытия по клику на оверлей либо по клику на крестик
-      onClose();
-    }
-  };
-
   return (
-    <div className={`popup popup_content_zoomed-card-image${isOpen ? ' popup_opened' : ''}`} onMouseDown={handleClick}>
+    <div className={`popup popup_content_zoomed-card-image${isOpen ? ' popup_opened' : ''}`} onMouseDown={onClose}>
       <div className="popup__img-wrapper">
         <button aria-label="close popup" className="popup__close-button" onClick={onClose}></button>
         <img className="popup__zoomed-image" src={card.link} alt={card.name} />

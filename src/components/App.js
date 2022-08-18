@@ -4,6 +4,7 @@ import api from 'utills/api';
 import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import EditProfilePopup from './EditProfilePopup';
+import ErrorPopup from './ErrorPopup';
 import Footer from './Footer';
 import Header from './Header';
 import ImagePopup from './ImagePopup';
@@ -16,6 +17,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpened, setIsImagePopupOpened] = useState(false);
   const [isRemoveCardPopupOpened, setIsRemoveCardPopupOpened] = useState(false);
+  const [isErrorPopupOpened, setIsErrorPopupOpened] = useState(true); //возможно удалить?
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
   const [cardToDelete, setCardTodelete] = useState({});
@@ -34,12 +36,20 @@ function App() {
     setIsAddPlacePopupOpen(true);
   };
 
+  const handleClickOnPopup = (e) => {
+    if (e.target.classList.contains('popup') || e.target.classList.contains('popup__close-button')) {
+      //реализация закрытия по клику на оверлей либо по клику на крестик
+      closeAllPopups();
+    }
+  };
+
   const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpened(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpened(false);
     setIsRemoveCardPopupOpened(false);
+    setIsErrorPopupOpened(false); //возможно удалить?
     setTimeout(() => setSelectedCard({}), 500); //не убираю картинку пока показывается анимация закрытия попапа
   };
 
@@ -130,15 +140,16 @@ function App() {
           cards={cards}
         />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpened} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
-        <ImagePopup isOpen={isImagePopupOpened} card={selectedCard} onClose={closeAllPopups} />
+        <EditProfilePopup isOpen={isEditProfilePopupOpened} onClose={handleClickOnPopup} onUpdateUser={handleUpdateUser} />
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handleClickOnPopup} onUpdateAvatar={handleUpdateAvatar} />
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handleClickOnPopup} onAddPlace={handleAddPlaceSubmit} />
+        <ImagePopup isOpen={isImagePopupOpened} card={selectedCard} onClose={handleClickOnPopup} />
         <RemoveCardPopup
           isOpen={isRemoveCardPopupOpened}
           onClose={closeAllPopups}
           onConfirmRemove={handleConfirmRemove}
         />
+        <ErrorPopup isOpen={isErrorPopupOpened} onClose={handleClickOnPopup} />
       </div>
     </CurrentUserContext.Provider>
   );

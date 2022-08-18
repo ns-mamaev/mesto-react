@@ -6,12 +6,12 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     useFormWithValidation(['name', 'link']);
 
   const onSubmit = () => onAddPlace(values);
-  const handleClose = () => {
+  const handleClose = (e) => {
     setTimeout(() => {
       resetValidation();
       setValues({ name: '', link: '' });
     }, 500); //жду закрытия попапа
-    onClose();
+    onClose(e);
   };
 
   return (

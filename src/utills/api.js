@@ -36,15 +36,15 @@ class Api {
   }
 
   setUserInfo(data) {
-    return this._changeData(data, '/users/me');
+    return this._changeData(data, '/users/med');
   }
 
   setAvatar(data) {
-    return this._changeData(data, '/users/me/avatar');
+    return this._changeData(data, '/users/me/avatarsd');
   }
 
   addCard(data) {
-    return fetch(`${this._baseUrl}/cards`, {
+    return fetch(`${this._baseUrl}/cardsd`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data),

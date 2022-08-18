@@ -44,3 +44,4 @@
 @import url(./blocks/form/__button/_disabled/form__button_disabled.css);
 @import url(./blocks/popup/__zoomed-image/popup__zoomed-image.css);
 @import url(./blocks/popup/__zomed-image-caption/popup__zoomed-image-caption.css);
+@import url(./blocks/popup/__error-message/popup__error-message.css);
