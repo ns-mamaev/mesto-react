@@ -13,11 +13,15 @@ import RemoveCardPopup from './RemoveCardPopup';
 
 function App() {
   const [isEditProfilePopupOpened, setIsEditProfilePopupOpened] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false)
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isLoadingAddPlace, setIsLoadingAddPlace] = useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isLoadingAvatar, setIsLoadingAvatar] = useState(false)
   const [isImagePopupOpened, setIsImagePopupOpened] = useState(false);
   const [isRemoveCardPopupOpened, setIsRemoveCardPopupOpened] = useState(false);
-  const [isErrorPopupOpened, setIsErrorPopupOpened] = useState(true); //возможно удалить?
+  const [isLoadingRemoveCard, setIsLoadingRemoveCard] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState({});
   const [cardToDelete, setCardTodelete] = useState({});
@@ -49,8 +53,16 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpened(false);
     setIsRemoveCardPopupOpened(false);
-    setIsErrorPopupOpened(false); //возможно удалить?
-    setTimeout(() => setSelectedCard({}), 500); //не убираю картинку пока показывается анимация закрытия попапа
+    if (selectedCard.link) {
+      setTimeout(() => setSelectedCard({}), 500); //не убираю картинку пока показывается анимация закрытия попапа
+    }
+  };
+
+  const clearErrorMessage = (e) => {
+    if (e.target.classList.contains('popup') || e.target.classList.contains('popup__close-button')) {
+      //реализация закрытия по клику на оверлей либо по клику на крестик
+      setErrorMessage('');
+    }
   };
 
   const handleCardClick = (card) => {
@@ -65,7 +77,7 @@ function App() {
       .then((updatedCard) => {
         setCards((state) => state.map((oldCard) => (oldCard._id === card._id ? updatedCard : oldCard)));
       })
-      .catch((err) => console.log(`Невозможно обработать лайк: ${err}`));
+      .catch(({ message }) => setErrorMessage(message));
   };
 
   const handleCardDelete = (card) => {
@@ -74,24 +86,47 @@ function App() {
   };
 
   const handleUpdateUser = (userData) => {
-    return api.setUserInfo(userData).then((newData) => {
-      setCurrentUser(newData);
-    });
+    setIsLoadingProfile(true)
+    return api.setUserInfo(userData)
+      .then((newData) => {
+        setCurrentUser(newData);
+        closeAllPopups();
+      })
+      .finally(() => setIsLoadingProfile(false))
+      .catch(({ message }) => setErrorMessage(message));
   };
 
   const handleUpdateAvatar = (avatarData) => {
+    setIsLoadingAvatar(true)
     return api.setAvatar(avatarData).then((newData) => {
       setCurrentUser(newData);
-    });
+      closeAllPopups();
+    })
+      .finally(() => setIsLoadingAvatar(false))
+      .catch(({ message }) => setErrorMessage(message));
   };
 
   const handleAddPlaceSubmit = (cardData) => {
-    return api.addCard(cardData).then((newCard) => setCards((cards) => [newCard, ...cards]));
+    setIsLoadingAddPlace(true)
+    return api.addCard(cardData)
+      .then((newCard) => {
+        setCards((cards) => [newCard, ...cards]);
+        closeAllPopups();
+      })
+      .finally(() => setIsLoadingAddPlace(false))
+      .catch(({ message }) => setErrorMessage(message));
+
   };
 
   const handleConfirmRemove = () => {
-    const id = cardToDelete._id;
-    return api.deleteCard(id).then(() => setCards((cards) => cards.filter((card) => card._id !== id)));
+    setIsLoadingRemoveCard(true)
+    return api.deleteCard(cardToDelete._id)
+      .then(() => {
+        setCards((cards) => cards.filter((card) => card._id !== cardToDelete._id))
+        closeAllPopups();
+      })
+      .finally(() => setIsLoadingRemoveCard(false))
+      .catch(({ message }) => setErrorMessage(message));
   };
 
   useEffect(() => {
@@ -100,7 +135,7 @@ function App() {
       .then((user) => {
         setCurrentUser(user);
       })
-      .catch((err) => console.log(`ошибка при загрузке данных пользователя: ${err}`));
+      .catch(({ message }) => setErrorMessage(message));
   }, []);
 
   useEffect(() => {
@@ -109,7 +144,7 @@ function App() {
       .then((cards) => {
         setCards(cards);
       })
-      .catch((err) => console.log(`ошибка при загрузке одной или нескольких карточек: ${err}`));
+      .catch(({ message }) => setErrorMessage(message));
   }, []);
 
   const closeByEsc = (e) => {
@@ -140,16 +175,30 @@ function App() {
           cards={cards}
         />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpened} onClose={handleClickOnPopup} onUpdateUser={handleUpdateUser} />
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handleClickOnPopup} onUpdateAvatar={handleUpdateAvatar} />
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handleClickOnPopup} onAddPlace={handleAddPlaceSubmit} />
-        <ImagePopup isOpen={isImagePopupOpened} card={selectedCard} onClose={handleClickOnPopup} />
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpened}
+          isLoading={isLoadingProfile}
+          onClose={handleClickOnPopup}
+          onUpdateUser={handleUpdateUser} />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          isLoading={isLoadingAvatar}
+          onClose={handleClickOnPopup}
+          onUpdateAvatar={handleUpdateAvatar} />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          isLoading={isLoadingAddPlace}
+          onClose={handleClickOnPopup}
+          onAddPlace={handleAddPlaceSubmit} />
+        <ImagePopup isOpen={isImagePopupOpened}
+          card={selectedCard}
+          onClose={handleClickOnPopup} />
         <RemoveCardPopup
           isOpen={isRemoveCardPopupOpened}
-          onClose={closeAllPopups}
-          onConfirmRemove={handleConfirmRemove}
-        />
-        <ErrorPopup isOpen={isErrorPopupOpened} onClose={handleClickOnPopup} />
+          isLoading={isLoadingRemoveCard}
+          onClose={handleClickOnPopup}
+          onConfirmRemove={handleConfirmRemove} />
+        <ErrorPopup errorMessage={errorMessage} onClose={clearErrorMessage} />
       </div>
     </CurrentUserContext.Provider>
   );

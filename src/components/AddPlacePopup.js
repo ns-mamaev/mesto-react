@@ -1,26 +1,27 @@
 import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+function AddPlacePopup({ isOpen, isLoading, onClose, onAddPlace }) {
   const { values, setValues, resetValidation, isErrors, errorMessages, isFormNotValid, onChange } =
     useFormWithValidation(['name', 'link']);
 
-  const onSubmit = () => onAddPlace(values);
-  const handleClose = (e) => {
-    setTimeout(() => {
-      resetValidation();
-      setValues({ name: '', link: '' });
-    }, 500); //жду закрытия попапа
-    onClose(e);
-  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    onAddPlace(values)
+      .then(() => {
+        resetValidation();
+        setValues({ name: '', link: '' })
+      });
+  }
 
   return (
     <PopupWithForm
       name="add-card"
       title="Новое место"
       isOpen={isOpen}
+      isLoading={isLoading}
       defaultButtonText="Добавить"
-      onClose={handleClose}
+      onClose={onClose}
       onSubmit={onSubmit}
       isFormNotValid={isFormNotValid}
     >

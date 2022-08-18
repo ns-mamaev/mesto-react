@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import useFormWithValidation from 'utills/hooks/useFormWithValidation';
 import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
+function EditProfilePopup({ isOpen, isLoading, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
   const { values, setValues, resetValidation, isErrors, errorMessages, isFormNotValid, onChange } =
     useFormWithValidation(['name', 'about']);
@@ -18,23 +18,19 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     }
   }, [currentUser]);
 
-  const onSubmit = () => onUpdateUser(values);
-
-  const handleClose = (e) => {
-    // таймер - для изменения только после анимации закрытия попапа
-    // значения инпутов изменятся при изменении currentUser
-    setTimeout(() => {
-      resetValidation();
-    }, 500);
-    onClose(e);
-  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    onUpdateUser(values)
+      .then(resetValidation)
+  }
 
   return (
     <PopupWithForm
       name="edit-profile"
       title="Редактировать профиль"
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
+      isLoading={isLoading}
       defaultButtonText="Сохранить"
       onSubmit={onSubmit}
       isFormNotValid={isFormNotValid}

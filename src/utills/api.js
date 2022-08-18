@@ -4,11 +4,12 @@ class Api {
     this._headers = headers;
   }
 
-  _handleResponse(res) {
+  async _handleResponse(res) {
     if (res.ok) {
       return res.json();
     }
-    return Promise.reject(`код ${res.status}`); //обработка ответа от сервера повторяется, решил выделить в отдельный метод
+    const err = await res.json();
+    return Promise.reject(err); //обработка ответа от сервера повторяется, решил выделить в отдельный метод
   }
 
   _getData(path) {
@@ -36,15 +37,15 @@ class Api {
   }
 
   setUserInfo(data) {
-    return this._changeData(data, '/users/med');
+    return this._changeData(data, '/users/me');
   }
 
   setAvatar(data) {
-    return this._changeData(data, '/users/me/avatarsd');
+    return this._changeData(data, '/users/me/avatar');
   }
 
   addCard(data) {
-    return fetch(`${this._baseUrl}/cardsd`, {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data),

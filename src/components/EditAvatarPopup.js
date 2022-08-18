@@ -1,17 +1,21 @@
 import { useRef } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+function EditAvatarPopup({ isOpen, isLoading, onClose, onUpdateAvatar }) {
   // не использую валидацию, т.к. по заданию нужен неуправляемый компонент с рефом
   const avatarRef = useRef();
 
-  const onSubmit = () => onUpdateAvatar({ avatar: avatarRef.current.value });
+  const onSubmit = (e) => {
+    e.preventDefault();
+    onUpdateAvatar({ avatar: avatarRef.current.value });
+  }
 
   return (
     <PopupWithForm
       name="edit-avatar"
       title="Обновить аватар"
       isOpen={isOpen}
+      isLoading={isLoading}
       onClose={onClose}
       onSubmit={onSubmit}
       defaultButtonText="Сохранить"
